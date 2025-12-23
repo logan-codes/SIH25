@@ -2,16 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { AuthProvider } from '../lib/auth';
+import { AuthProvider } from '../lib/AuthContext';
 
 const Home = () => {
     const navigate = useNavigate();
     const features = [
-        {
-            icon: 'fa-shield-alt',
-            title: 'AI-Powered Verification',
-            description: 'Advanced algorithms analyze certificates for authenticity markers and detect anomalies.'
-        },
         {
             icon: 'fa-database',
             title: 'Institutional Database',
@@ -20,18 +15,17 @@ const Home = () => {
         {
             icon: 'fa-qrcode',
             title: 'QR Code Validation',
-            description: 'Instant verification through embedded QR codes on digital certificates.'
+            description: 'Instant verification through QR codes.'
         },
         {
             icon: 'fa-chart-line',
             title: 'Fraud Analytics',
-            description: 'Comprehensive dashboard to track and analyze forgery trends across institutions.'
+            description: 'Comprehensive dashboard to track and analyze forgery trends.'
         }
     ];
     
     const stats = [
         { value: '50,000+', label: 'Certificates Verified' },
-        { value: '98.7%', label: 'Accuracy Rate' },
         { value: '200+', label: 'Institutions Integrated' },
         { value: '1,240', label: 'Frauds Detected' }
     ];
@@ -49,13 +43,13 @@ const Home = () => {
                         </span>
                     </h1>
                     <p className="text-xl text-slate-300 mb-10 max-w-3xl mx-auto fade-in">
-                        Secure, AI-powered verification of academic certificates to combat fraud and preserve academic integrity.
+                        Secure verification of academic certificates to combat fraud and preserve academic integrity.
                     </p>
                     <button onClick={() => navigate('/verify') } className="btn-primary text-white font-semibold py-3 px-8 rounded-lg text-lg inline-flex items-center fade-in">
                         Verify a Certificate <i className="fas fa-arrow-right ml-2"></i>
                     </button>
                     
-                    <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div className="mt-20 grid grid-cols-2 md:grid-cols-3 gap-8">
                         {stats.map((stat, index) => (
                             <div key={index} className="text-center">
                                 <div className="text-4xl font-bold text-white">{stat.value}</div>
@@ -89,7 +83,7 @@ const Home = () => {
                         <div className="card p-8">
                             <h3 className="text-2xl font-semibold text-white mb-4">Our Solution</h3>
                             <ul className="text-slate-300 space-y-3">
-                                <li>AI-driven verification process</li>
+                                <li>Blockchain backed verification process</li>
                                 <li>Instant results and detailed reports</li>
                                 <li>Collaboration with educational institutions</li>
                             </ul>
@@ -107,7 +101,7 @@ const Home = () => {
                         </p>
                     </div>
                     
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {features.map((feature, index) => (
                             <div key={index} className="card p-6 text-center group">
                                 <div className={`text-5xl text-blue-500 mb-4`}>
@@ -125,7 +119,7 @@ const Home = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Verify Certificates?</h2>
                     <p className="text-blue-100 text-xl mb-10 max-w-3xl mx-auto">
-                        Join educational institutions and employers across Jharkhand in the fight against academic fraud.
+                        Join us in the fight against credential frauds.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <button onClick={() => navigate('/verify')} className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg text-lg">

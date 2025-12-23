@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AuthProvider } from '../../lib/auth';
+import { AuthProvider } from '../../lib/AuthContext';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 

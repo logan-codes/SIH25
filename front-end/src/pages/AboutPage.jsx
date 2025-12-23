@@ -1,16 +1,10 @@
 import React from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import { AuthProvider } from '../lib/auth';
+import { AuthProvider } from '../lib/AuthContext';
 
 const AboutPage = () => {
     const technologies = [
-        {
-            icon: 'fa-brain',
-            title: 'Artificial Intelligence',
-            description: 'Advanced machine learning algorithms analyze document patterns, detect forgeries, and validate authenticity with high precision.',
-            features: ['OCR Text Extraction', 'Pattern Recognition', 'Anomaly Detection', 'Confidence Scoring']
-        },
         {
             icon: 'fa-link',
             title: 'Blockchain Security',
@@ -82,20 +76,16 @@ const AboutPage = () => {
 
             {/* Impact Section */}
             <section className="py-20 bg-slate-900">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center ">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">Our Impact</h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   <div className="card p-8">
-                      <div className="text-4xl font-bold text-green-400 mb-2">500+</div>
+                      <div className="text-4xl font-bold text-green-400 mb-2">1</div>
                       <div className="text-slate-400">Institutions Connected</div>
                   </div>
                   <div className="card p-8">
-                      <div className="text-4xl font-bold text-blue-400 mb-2">50,000+</div>
+                      <div className="text-4xl font-bold text-blue-400 mb-2">5,000+</div>
                       <div className="text-slate-400">Certificates Verified</div>
-                  </div>
-                  <div className="card p-8">
-                      <div className="text-4xl font-bold text-purple-400 mb-2">99.5%</div>
-                      <div className="text-slate-400">Accuracy Rate</div>
                   </div>
                   <div className="card p-8">
                       <div className="text-4xl font-bold text-yellow-400 mb-2">2s</div>

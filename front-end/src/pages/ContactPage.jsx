@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import { AuthProvider } from '../lib/auth';
+import { AuthProvider } from '../lib/AuthContext';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -56,7 +56,7 @@ export default function ContactPage() {
         {
             icon: 'fa-map-marker-alt',
             title: 'Office',
-            details: ['Jharkhand Education Department', 'Ranchi, Jharkhand - 834001']
+            details: ['Ministry of Skill Development and Entrepreneurship', 'Connaught Place, New Delhi, Delhi 110001']
         }
     ];
 

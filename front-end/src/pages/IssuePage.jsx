@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import { AuthProvider } from '../lib/auth';
+import { AuthProvider, useAuth } from '../lib/AuthContext';
+import apiClient from '../lib/api';
 
 const IssuePage = () => {
+    const { user } = useAuth();
     const [file, setFile] = useState(null);
     const [recipient, setRecipient] = useState('');
     const [issuer, setIssuer] = useState('');
+    const [fileHash, setFileHash] = useState('');
+    const [issuedOn, setIssuedOn] = useState('');
     const [isIssuing, setIsIssuing] = useState(false);
     const [result, setResult] = useState(null);
     const [dragOver, setDragOver] = useState(false);
+    const [authError, setAuthError] = useState(null);
 
     const handleFileUpload = (uploadedFile) => {
         setFile(uploadedFile);
@@ -35,37 +40,57 @@ const IssuePage = () => {
         }
     };
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (!file || !recipient || !issuer) {
             alert('Please fill in all fields and upload a file');
             return;
         }
+
+        setIsIssuing(true);
+        setAuthError(null);
 
         const formData = new FormData();
         formData.append('file', file);
         formData.append('recipient', recipient);
         formData.append('issuer', issuer);
 
-        fetch('http://localhost:3001/api/issue', {
-            method: 'POST',
-            body: formData
-        }).then(res => {
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
-            return res.json();
-        }).then(data => {
-            setResult(data);
-            setIsIssuing(false);
-        }).catch(err => {
-            console.error('Issuing error:', err);
-            setResult({
-                success: false,
-                error: 'Certificate issuance failed: ' + err.message
+        try {
+            // Using axios through apiClient which automatically adds JWT token
+            const response = await apiClient.post('/api/issue', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `${localStorage.getItem('token')}`
+                }
             });
+            
+            setResult(response.data);
+            setFileHash(response.data.fileHash);
+            setIssuedOn(response.data.issued_on);
+            setIssuer(response.data.issuer);
+            setRecipient(response.data.recipient);
+        } catch (err) {
+            console.error('Issuing error:', err);
+            
+            // Handle different types of errors
+            if (err.response) {
+                // Server responded with an error status
+                if (err.response.status === 401 || err.response.status === 403) {
+                    setAuthError('You are not authorized to issue certificates. Please log in with appropriate credentials.');
+                }
+                
+                setResult({
+                    success: false,
+                    error: err.response.data.error || err.response.data.message || 'Certificate issuance failed'
+                });
+            } else {
+                setResult({
+                    success: false,
+                    error: 'Certificate issuance failed: ' + err.message
+                });
+            }
+        } finally {
             setIsIssuing(false);
-        });
-        setIsIssuing(true);
+        }
     };
 
     const resetForm = () => {
@@ -89,6 +114,14 @@ const IssuePage = () => {
                 </div>
 
                 <div className="card p-8 mb-8">
+                    {authError && (
+                        <div className="bg-red-900 text-red-200 p-4 rounded-lg mb-6">
+                            <div className="flex items-center">
+                                <i className="fas fa-exclamation-triangle mr-2"></i>
+                                <span>{authError}</span>
+                            </div>
+                        </div>
+                    )}
                     {!result ? (
                         <>
                             {/* File Upload Area */}
@@ -176,7 +209,7 @@ const IssuePage = () => {
                                             Certificate Issued Successfully!
                                         </div>
                                         <p className="text-slate-400 mt-4">
-                                            Certificate ID: {result.certID}
+                                            File Hash : {result.fileHash}
                                         </p>
                                     </div>
 
@@ -188,8 +221,8 @@ const IssuePage = () => {
                                         </h3>
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div className="flex justify-between py-2 border-b border-slate-600">
-                                                <span className="text-slate-400">Certificate ID:</span>
-                                                <span className="text-white font-medium">{result.certID}</span>
+                                                <span className="text-slate-400">File Hash:</span>
+                                                <span className="text-white font-medium break-all">{fileHash}</span>
                                             </div>
                                             <div className="flex justify-between py-2 border-b border-slate-600">
                                                 <span className="text-slate-400">Recipient:</span>
@@ -200,8 +233,8 @@ const IssuePage = () => {
                                                 <span className="text-white font-medium">{issuer}</span>
                                             </div>
                                             <div className="flex justify-between py-2 border-b border-slate-600">
-                                                <span className="text-slate-400">File:</span>
-                                                <span className="text-white font-medium">{file?.name}</span>
+                                                <span className="text-slate-400">Issued On:</span>
+                                                <span className="text-white font-medium">{issuedOn}</span>
                                             </div>
                                         </div>
                                     </div>

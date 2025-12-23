@@ -1,5 +1,5 @@
 import React, { use, useState } from "react";
-import { useAuth } from "../lib/auth";
+import { useAuth } from "../lib/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ currentPage, setCurrentPage }) => {
@@ -45,16 +45,16 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
               >
                 Verify
               </button>
-              <button
-                onClick={() => navigate("/issue-certificate")}
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  currentPage === "issue"
-                    ? "text-white bg-slate-700"
-                    : "text-slate-300 hover:text-white"
-                }`}
-              >
-                Issue
-              </button>
+              {user ? (  <button
+                  onClick={() => navigate("/issue-certificate")}
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    currentPage === "issue"
+                      ? "text-white bg-slate-700"
+                      : "text-slate-300 hover:text-white"
+                  }`}
+                >
+                  Issue
+                </button>): (<></>)}
               <button
                 onClick={() =>  navigate("/about")}
                 className={`px-3 py-2 rounded-md text-sm font-medium ${
@@ -78,7 +78,7 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
                 </button>
               ) : (
                 <button
-                  onClick={() => navigate("/admin-login")}
+                  onClick={() => navigate("/admin")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
                     currentPage === "admin-login"
                       ? "text-white bg-slate-700"
@@ -154,15 +154,16 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
             >
               Verify
             </button>
-            <button
-              onClick={() => {
-                navigate("/issue-certificate");
-                setIsMenuOpen(false);
-              }}
-              className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left"
-            >
-              Issue
-            </button>
+            { user ? (<button
+                onClick={() => {
+                  navigate("/issue-certificate");
+                  setIsMenuOpen(false);
+                }}
+                className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+              >
+                Issue
+              </button>) : (<></>)
+            }
             <button
               onClick={() => {
                 navigate("/about");
