@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename);
 
 // Contract ABI
 const CONTRACT_ABI = [
-  "function issueCertificate(string,string,string)",
-  "function verifyCertificate(string) view returns (string,string,bool)",
+  "function issueCertificate(string,string,string,string)",
+  "function verifyCertificate(string) view returns (string,string,string,bool)",
   "function certificateExists(string) view returns (bool)",
   "function owner() view returns (address)"
 ];
@@ -85,11 +85,11 @@ class BlockchainService {
     }
   }
 
-  async issueCertificate(recipient, issued_by, file) {
+  async issueCertificate(recipient, issuer, file, issued_on) {
     if (!this.contract) throw new Error("Not connected to blockchain");
 
     try {
-      const tx = await this.contract.issueCertificate(recipient, issued_by, file);
+      const tx = await this.contract.issueCertificate(recipient, issuer, issued_on, file);
       await tx.wait();
       console.log("Certificate issued:", file);
       return tx.hash;
@@ -116,7 +116,7 @@ class BlockchainService {
       }
 
       // Get the certificate data
-      const [recipient, issued_by, valid] = await this.contract.verifyCertificate(file);
+      const [recipient, issuer, issued_on, valid] = await this.contract.verifyCertificate(file);
 
       // Check if the certificate exists (recipient should not be empty)
       if (!recipient || recipient.trim() === '') {
@@ -126,14 +126,15 @@ class BlockchainService {
 
       console.log('Certificate found:');
       console.log('Recipient:', recipient);
-      console.log('Issued by:', issued_by);
+      console.log('Issued by:', issuer);
       console.log('File:', file);
       console.log('Valid:', valid);
       
       return { 
         recipient: recipient.trim(), 
-        issuer: issued_by.trim(), 
+        issuer: issuer.trim(), 
         file: file.trim(), 
+        issued_on: issued_on,
         valid: valid 
       };
 
